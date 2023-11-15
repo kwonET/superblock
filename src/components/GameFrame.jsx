@@ -5,13 +5,27 @@ import styled from "styled-components";
 import { BalloonImage } from "../assets";
 import { randomBalloonList } from "../utils";
 const GameFrame = () => {
-  const [frameSize, setFrameSize] = useState(5);
+  const [frameSize, setFrameSize] = useState(9);
   const [balloonList, setBalloonList] = useState([]);
+  const [popList, setPopList] = useState([]);
   useEffect(() => {
     setBalloonList(randomBalloonList(frameSize));
   }, [frameSize]);
 
-  const popBalloons = (index) => {};
+  const popBalloons = (index) => {
+    let popArr = [
+      index - 1,
+      index,
+      index + 1,
+      index - 1 - frameSize,
+      index - frameSize,
+      index + 1 - frameSize,
+      index - 1 + frameSize,
+      index + frameSize,
+      index + 1 + frameSize,
+    ];
+    setPopList(popArr);
+  };
 
   return (
     <FrameSection style={{ gridTemplateColumns: `repeat(${frameSize}, 1fr)` }}>
@@ -24,7 +38,7 @@ const GameFrame = () => {
               height: `${70 / frameSize}rem`,
             }}
           >
-            {balloonList.includes(index) ? (
+            {balloonList.includes(index) && !popList.includes(index) ? (
               <Balloon src={BalloonImage} onClick={() => popBalloons(index)} />
             ) : (
               <></>
