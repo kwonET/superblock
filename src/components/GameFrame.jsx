@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BalloonImage } from "../assets";
-import { randomBalloonList, findDfs } from "../utils";
+import { randomBalloonList, runDFS, findDFS } from "../utils";
 import { useRecoilValue } from "recoil";
 import { frameSizeSelect } from "../atoms/selector";
 
@@ -10,24 +10,43 @@ const GameFrame = () => {
   // const [frameSize, setFrameSize] = useState(getframeSizeSelect);
   const [frameSize, setFrameSize] = useState(5);
   const [balloonList, setBalloonList] = useState([]); //랜덤으로 배치된 풍선의 위치 리스트
-  console.log(randomBalloonList(frameSize));
-  console.log("dfs", findDfs(frameSize, randomBalloonList(frameSize)));
 
-  let frames = Array(frameSize * frameSize).fill(1);
+  runDFS(frameSize, randomBalloonList(frameSize));
+  const popBalloons = (index) => {
+    const linkedElement = findDFS(
+      Math.floor(index / frameSize),
+      index % frameSize
+    );
+    const newArray = [...balloonList];
+    for (let i = 0; i < linkedElement.length; i++) {
+      newArray[linkedElement[i][0] * frameSize + linkedElement[i][1]] = 0;
+    }
+    setBalloonList(newArray);
+  };
+  useEffect(() => {
+    const add2d = [...randomBalloonList(frameSize)];
+    let arr = [];
+    for (let i = 0; i < frameSize; i++) {
+      for (let j = 0; j < frameSize; j++) {
+        arr.push(add2d[i][j]);
+      }
+    }
+    setBalloonList(arr);
+  }, []);
   return (
     <FrameSection style={{ gridTemplateColumns: `repeat(${frameSize}, 1fr)` }}>
-      {frames.map((frame, index) => (
+      {balloonList.map((balloon, index) => (
         <Frame
           style={{
             width: `${70 / frameSize}rem`,
             height: `${70 / frameSize}rem`,
           }}
         >
-          {/* {frame ? (
+          {balloon ? (
             <Balloon src={BalloonImage} onClick={() => popBalloons(index)} />
           ) : (
             <></>
-          )} */}
+          )}
         </Frame>
       ))}
     </FrameSection>

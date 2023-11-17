@@ -8,7 +8,7 @@ export const randomBalloonList = (framsize) => {
   arr[1][1] = 1;
   arr[1][3] = 1;
   arr[1][4] = 1;
-  arr[2][2] = 1;
+  arr[2][1] = 1;
   arr[3][2] = 1;
   arr[3][3] = 1;
   arr[4][0] = 1;
@@ -31,10 +31,9 @@ const dir = [
   [1, 0],
   [-1, 0],
 ];
-const visited = Array.from(Array(5), () => Array(5).fill(0));
 let dfsarr = [];
 let totaldfs = {};
-export const dfs = (graph, x, y, framsize) => {
+export const dfs = (graph, x, y, framsize, visited) => {
   visited[x][y] = 1;
   dfsarr.push([x, y]);
   for (let i = 0; i < 4; i++) {
@@ -44,20 +43,23 @@ export const dfs = (graph, x, y, framsize) => {
     if (nx < 0 || nx >= framsize || ny < 0 || ny >= framsize) continue;
 
     if (!visited[nx][ny] && graph[nx][ny] === 1) {
-      dfs(graph, nx, ny, framsize);
+      dfs(graph, nx, ny, framsize, visited);
     }
   }
 };
-export const findDfs = (framsize, graph) => {
+export const runDFS = (framsize, graph) => {
+  const visited = Array.from(Array(framsize), () => Array(framsize).fill(0));
   for (let i = 0; i < framsize; i++) {
     for (let j = 0; j < framsize; j++) {
       if (graph[i][j] === 1) {
         visited.forEach((row) => row.fill(0));
         dfsarr = [];
-        dfs(graph, i, j, framsize);
-        totaldfs[(i, j)] = dfsarr;
+        dfs(graph, i, j, framsize, visited);
+        totaldfs[[i, j]] = dfsarr;
       }
     }
   }
-  return totaldfs;
+};
+export const findDFS = (x, y) => {
+  return totaldfs[[x, y]];
 };
