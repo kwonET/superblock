@@ -6,14 +6,16 @@ import { BalloonImage } from "../assets";
 import { randomBalloonList } from "../utils";
 const GameFrame = () => {
   const [frameSize, setFrameSize] = useState(9);
-  const [balloonList, setBalloonList] = useState([]);
+  const [balloonList, setBalloonList] = useState(randomBalloonList(frameSize)); //랜덤으로 배치된 풍선의 위치 리스트
   const [popList, setPopList] = useState([]);
+
   useEffect(() => {
-    setBalloonList(randomBalloonList(frameSize));
+    // setBalloonList(randomBalloonList(frameSize));
+    console.log(balloonList);
   }, [frameSize]);
 
   const popBalloons = (index) => {
-    let popArr = [
+    setPopList([
       index - 1,
       index,
       index + 1,
@@ -23,9 +25,17 @@ const GameFrame = () => {
       index - 1 + frameSize,
       index + frameSize,
       index + 1 + frameSize,
-    ];
-    setPopList(popArr);
+    ]);
   };
+
+  useEffect(() => {
+    console.log("pop", popList);
+    popList.forEach((pop) => {
+      if (balloonList.includes(pop)) {
+        setBalloonList(balloonList.splice(pop, 1));
+      }
+    });
+  }, [popList]);
 
   return (
     <FrameSection style={{ gridTemplateColumns: `repeat(${frameSize}, 1fr)` }}>
@@ -38,7 +48,7 @@ const GameFrame = () => {
               height: `${70 / frameSize}rem`,
             }}
           >
-            {balloonList.includes(index) && !popList.includes(index) ? (
+            {balloonList.includes(index) ? (
               <Balloon src={BalloonImage} onClick={() => popBalloons(index)} />
             ) : (
               <></>
