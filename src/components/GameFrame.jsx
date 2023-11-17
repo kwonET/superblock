@@ -1,60 +1,35 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BalloonImage } from "../assets";
-import { randomBalloonList } from "../utils";
+import { randomBalloonList, findDfs } from "../utils";
+import { useRecoilValue } from "recoil";
+import { frameSizeSelect } from "../atoms/selector";
+
 const GameFrame = () => {
-  const [frameSize, setFrameSize] = useState(9);
-  const [balloonList, setBalloonList] = useState(randomBalloonList(frameSize)); //랜덤으로 배치된 풍선의 위치 리스트
-  const [popList, setPopList] = useState([]);
+  // const getframeSizeSelect = useRecoilValue(frameSizeSelect);
+  // const [frameSize, setFrameSize] = useState(getframeSizeSelect);
+  const [frameSize, setFrameSize] = useState(5);
+  const [balloonList, setBalloonList] = useState([]); //랜덤으로 배치된 풍선의 위치 리스트
+  console.log(randomBalloonList(frameSize));
+  console.log("dfs", findDfs(frameSize, randomBalloonList(frameSize)));
 
-  useEffect(() => {
-    // setBalloonList(randomBalloonList(frameSize));
-    console.log(balloonList);
-  }, [frameSize]);
-
-  const popBalloons = (index) => {
-    setPopList([
-      index - 1,
-      index,
-      index + 1,
-      index - 1 - frameSize,
-      index - frameSize,
-      index + 1 - frameSize,
-      index - 1 + frameSize,
-      index + frameSize,
-      index + 1 + frameSize,
-    ]);
-  };
-
-  useEffect(() => {
-    console.log("pop", popList);
-    popList.forEach((pop) => {
-      if (balloonList.includes(pop)) {
-        setBalloonList(balloonList.splice(pop, 1));
-      }
-    });
-  }, [popList]);
-
+  let frames = Array(frameSize * frameSize).fill(1);
   return (
     <FrameSection style={{ gridTemplateColumns: `repeat(${frameSize}, 1fr)` }}>
-      {Array(frameSize * frameSize)
-        .fill(null)
-        .map((_, index) => (
-          <Frame
-            style={{
-              width: `${70 / frameSize}rem`,
-              height: `${70 / frameSize}rem`,
-            }}
-          >
-            {balloonList.includes(index) ? (
-              <Balloon src={BalloonImage} onClick={() => popBalloons(index)} />
-            ) : (
-              <></>
-            )}
-          </Frame>
-        ))}
+      {frames.map((frame, index) => (
+        <Frame
+          style={{
+            width: `${70 / frameSize}rem`,
+            height: `${70 / frameSize}rem`,
+          }}
+        >
+          {/* {frame ? (
+            <Balloon src={BalloonImage} onClick={() => popBalloons(index)} />
+          ) : (
+            <></>
+          )} */}
+        </Frame>
+      ))}
     </FrameSection>
   );
 };
