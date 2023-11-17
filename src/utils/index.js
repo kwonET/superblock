@@ -33,6 +33,7 @@ const dir = [
 ];
 let dfsarr = [];
 let totaldfs = {};
+let prioritydfs = {};
 export const dfs = (graph, x, y, framsize, visited) => {
   visited[x][y] = 1;
   dfsarr.push([x, y]);
@@ -47,6 +48,31 @@ export const dfs = (graph, x, y, framsize, visited) => {
     }
   }
 };
+// 객체의 value에 따라 정렬하는 함수
+const sortByValue = (obj) => {
+  const sortedArray = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+
+  const sortedObject = Object.fromEntries(sortedArray);
+  return sortedObject;
+};
+// 길이에 따른 우선순위를 정하는 함수
+const transformAndSort = (obj) => {
+  const entries = Object.entries(obj);
+  entries.sort((a, b) => b[1] - a[1]);
+  let currentRank = 0;
+  let currentValue = null;
+
+  const transformedObject = entries.reduce((acc, [key, value], index) => {
+    if (value !== currentValue) {
+      currentValue = value;
+      currentRank += 1;
+    }
+    acc[key] = currentRank;
+    return acc;
+  }, {});
+
+  return transformedObject;
+};
 export const runDFS = (framsize, graph) => {
   const visited = Array.from(Array(framsize), () => Array(framsize).fill(0));
   for (let i = 0; i < framsize; i++) {
@@ -56,10 +82,15 @@ export const runDFS = (framsize, graph) => {
         dfsarr = [];
         dfs(graph, i, j, framsize, visited);
         totaldfs[[i, j]] = dfsarr;
+        prioritydfs[[i, j]] = dfsarr.length;
       }
     }
   }
+  prioritydfs = transformAndSort(prioritydfs);
 };
 export const findDFS = (x, y) => {
   return totaldfs[[x, y]];
+};
+export const getPriority = (x, y) => {
+  return prioritydfs[[x, y]];
 };
