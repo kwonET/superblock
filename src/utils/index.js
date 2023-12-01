@@ -1,27 +1,21 @@
+// rand : min ~ max 사이의 랜덤 값 반환
+const rand = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 export const randomBalloonList = (framsize) => {
-  // let maxsize =
-  //   Math.floor(Math.random() * (framsize * framsize)) + framsize + 1; // 풍선의 총 개수 랜덤 생성
-  const arr = Array.from(Array(framsize), () => new Array(framsize).fill(0));
-  arr[0][0] = 1;
-  arr[0][4] = 1;
-  arr[1][0] = 1;
-  arr[1][1] = 1;
-  arr[1][3] = 1;
-  arr[1][4] = 1;
-  arr[2][1] = 1;
-  arr[3][2] = 1;
-  arr[3][3] = 1;
-  arr[4][0] = 1;
-  // for (let i = 0; i < arr.length; i++) {
-  //   for (let j = 0; j < arr[i].length; j++) {
-  //     if (i == 0 || j == 3) {
-  //       arr[i][j] = 1;
-  //     }
-  //     if (i == 3 && j == 2) {
-  //       arr[i][j] = 1;
-  //     }
-  //   }
-  // }
+  let totalBalloons = Math.floor((framsize * framsize) / 2); // 8x8이면, 64/2개의 풍선을 가진다고 가정
+  let arr = Array.from(Array(framsize), () => new Array(framsize).fill(0));
+  let i, j;
+  let total = 0;
+  while (total < totalBalloons) {
+    i = rand(0, framsize - 1);
+    j = rand(0, framsize - 1);
+    if (arr[i][j] == 0) {
+      arr[i][j] = 1;
+      total++;
+    }
+  }
+
   return arr;
 };
 
