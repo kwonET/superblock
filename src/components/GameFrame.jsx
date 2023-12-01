@@ -5,8 +5,8 @@ import { randomBalloonList, runDFS, findDFS, getPriority } from "../utils";
 
 const GameFrame = ({ frameSize }) => {
   const [balloonList, setBalloonList] = useState([]); //랜덤으로 배치된 풍선의 위치 리스트
-  console.log(randomBalloonList(frameSize));
-  // runDFS(frameSize, randomBalloonList(frameSize));
+  // console.log(randomBalloonList(frameSize));
+  runDFS(frameSize, randomBalloonList(frameSize));
 
   /**
    * popBalloons : 풍선을 클릭하면 실행되는 함수, balloonList를 dfs에 기반하여 업데이트한다.
