@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import GameFrame from "../components/GameFrame";
@@ -8,7 +7,6 @@ import Header from "../components/Header";
 const Start = () => {
   const [initFrameSize, setinitFrameSize] = useState(3);
   const [isStart, setIsStart] = useState(false);
-  // const [frameSize, setFrameSizeSelect] = useRecoilState(frameSizeSelect);
   const handleOnChange = (e) => {
     const fs = e.target.value;
     setinitFrameSize(Number(fs));
@@ -16,9 +14,6 @@ const Start = () => {
   const handleOnClick = () => {
     setIsStart(true);
   };
-  // useEffect(() => {
-  //   console.log(initFrameSize);
-  // }, [initFrameSize]);
   return (
     <Wrapper>
       <Header />
